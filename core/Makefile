@@ -359,6 +359,8 @@ endef
 name := $(TARGET_PRODUCT)
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
+  # Assume non-release recoveries skip signature check
+  extra_ota_args := --no_signing
 endif
 name := $(name)-apkcerts-$(FILE_NAME_TAG)
 intermediates := \
@@ -1976,6 +1978,7 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
 	   --block \
 	   -p $(HOST_OUT) \
 	   -k $(KEY_CERT_PAIR) \
+	   $(extra_ota_args) \
 	   --override_device=$(override_device) \
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
